@@ -1,7 +1,9 @@
 REAL ESTATE MANAGEMENT – C PROJECT
+
 By Ziyad Mouzoun
 
 Project Overview:
+
 A console-based real estate management system built in C using linked lists. Manages properties and transactions efficiently with features like add, edit, delete, search, and display.
 
 Features:
