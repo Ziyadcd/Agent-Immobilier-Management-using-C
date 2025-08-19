@@ -1,0 +1,170 @@
+struct comp* Trie_tableux(struct comp *T,int j){
+struct comp temp1;
+for(int i=0;i<j;i++){
+    for(int k=i;k<j;k++){
+        if(T[i].inc<T[k].inc){
+            temp1=T[i];
+            T[i]=T[k];
+            T[k]=temp1;
+        }
+    }
+}
+return T;
+}
+
+
+void Generer_Rapport_Analyse(Agent_p *head,int Mois){
+    float moyder=0,moyacc=0;
+Agent_p*temp=head;
+struct comp *T;
+T=(struct comp*)malloc(sizeof(struct comp)*100);
+struct comp *B;
+B=(struct comp*)malloc(sizeof(struct comp)*100);
+int incre=0;
+if (T == NULL || B == NULL) {
+    printf("Erreur d'allocation m�moire.\n");
+    return;
+}
+int j=0;
+int totale_tran=0,maison=0,appart=0,terr=0,autre=0,moin_200=0,plus_500=0,between200k500=0,quarteA=0,quarteB=0,quarteC=0,Totale_mois_dernier=0,Sud=0,Nord=0,Est=0,Central=0,quarteD=0;
+
+float vente=0,location=0,PrixADM=0,PrixADDM=0;
+if(head==NULL){
+    printf("Tu as pas Des agences\n");
+    return;
+}
+transaction*temp2=head->A.T;
+while(temp!=NULL){
+        temp2=temp->A.T;
+        while(temp2!=NULL){
+            if(temp2->date_tran.month==Mois){
+
+                moyacc+=temp2->montant;
+                    incre++;
+                totale_tran++;
+                if(strcmp("123 Maple Street",temp->A.adresse)==0)
+                    PrixADM+=temp2->montant;
+            if(strcmp(temp2->type_vente,"vente")==0){
+                vente+=temp2->montant;
+            }else{
+            location+=temp2->montant;
+            }
+            if(strcmp(temp->A.Type_P,"maison")==0){
+                maison++;
+            if(strcmp(temp->A.Quartie,"Sud")==0)
+                Sud++;
+            if(strcmp(temp->A.Quartie,"Est")==0)
+                Est++;
+                if(strcmp(temp->A.Quartie,"Nord")==0)
+                Nord++;
+                if(strcmp(temp->A.Quartie,"Central")==0)
+                Central++;
+            }else if(strcmp(temp->A.Type_P,"appartement")==0){
+                appart++;
+                if(strcmp(temp->A.Quartie,"Sud")==0)
+                Sud++;
+            if(strcmp(temp->A.Quartie,"Est")==0)
+                Est++;
+                if(strcmp(temp->A.Quartie,"Nord")==0)
+                Nord++;
+            }else if(strcmp(temp->A.Type_P,"terrains")==0){
+                terr++;
+            }else{
+            autre++;
+            }
+            if(temp2->montant<200000){
+                moin_200++;
+            }else if(temp2->montant>=200000 && temp2->montant<500000){
+            between200k500++;
+            }else{
+            plus_500++;
+            }
+            if(strcmp(temp->A.Quartie,"Sud")==0)
+                quarteA++;
+                if(strcmp(temp->A.Quartie,"Est")==0)
+                quarteB++;
+            if(strcmp(temp->A.Quartie,"Nord")==0)
+                quarteC++;
+                if(strcmp(temp->A.Quartie,"Central")==0)
+                quarteD++;
+        }else if(temp2->date_tran.month==Mois-1){
+            moyder+=temp2->montant;
+        Totale_mois_dernier++;
+        if(strcmp(temp->A.adresse,"123 Maple Street"))
+            PrixADDM+=temp2->montant;
+        }
+            temp2=temp2->next;
+}
+ T[j].id=temp->A.Id;
+ T[j].inc=incre;
+ incre=0;
+ j++;
+    temp=temp->next;
+
+}
+T=Trie_tableux(T,j);
+
+printf("1.Totale Des Transactions : %d\n",totale_tran);
+printf("2.Revenus Totaux : \n");
+printf("-Ventes : $%f\n",vente);
+printf("-Location : $%f\n",location);
+printf("-Totale : $%f\n",vente+location);
+printf("3. R�partition des Transactions par Type de Propri�t� :\n");
+printf("-Appartements : %d\n",appart);
+printf("-Maisons : %d\n",maison);
+printf("-Terrains : %d\n",terr);
+printf("-Autres : %d\n",autre);
+printf("4. R�partition des Transactions par Prix :");
+printf("- Moins de $200,000 : %d transaction\n",moin_200);
+printf("- $200,000 - $500,000 : %d transactions",between200k500);
+printf("- Plus de $500,000 : %d transactions",plus_500);
+printf("5. Top 3 des Agents Immobiliers Performants :\n");
+for(int i=0;i<j;i++){
+    printf("Agent de id %d : %d transactions\n",T[i].id,T[i].inc);
+}
+if(Totale_mois_dernier+totale_tran==0 && moyacc+moyder==0) printf("Error!!\n");
+int LL=((float)(totale_tran-Totale_mois_dernier)/(Totale_mois_dernier+totale_tran))*100;
+LL<0 ? printf("- Le nombre de transactions a diminu� de %d%% par rapport au mois dernier\n",-LL) :( LL>0 ? printf("- Le nombre de transactions a augmenter de %d%% par rapport au mois dernier\n",LL) : printf("- Le nombre de transactions est comme le dernier mois\n"));
+int LG=((float)(moyacc-moyder)/(moyacc+moyder))*100;
+LG<0 ? printf("- Les prix moyens des propri�t�s ont diminu� de %d%% par rapport au mois dernier\n",-LG) :( LG>0 ? printf("- Les prix moyens des propri�t�s ont augment� de %d%% par rapport au mois dernier\n",LG) : printf(" Les prix moyens des propri�t�s reste comme le dernier mois\n"));
+                if(maison>0 && appart>0 && maison>= autre && appart>=autre && maison>=terr && appart>=terr)
+                  {
+                      if(Est>=Nord && Est>=Sud &&Est>=Central)
+                        printf("- La demande pour les appartements et les maisons reste �lev�e, en particulier dans les quartiers Est\n");
+                       if(Nord>=Est && Nord>=Sud && Nord>=Central)
+                        printf("- La demande pour les appartements et les maisons reste �lev�e, en particulier dans les quartiers Nord\n");
+                         if(Sud>=Nord && Sud>=Est && Sud>=Central)
+                        printf("- La demande pour les appartements et les maisons reste �lev�e, en particulier dans les quartiers Sud\n");
+                          if(Central>=Nord && Central>=Est && Central>=Sud)
+                        printf("- La demande pour les appartements et les maisons reste �lev�e, en particulier dans les quartiers Central\n");
+                  }
+                B[0].inc=quarteA;
+               strcpy(B[0].R,"Sud");
+
+                B[1].inc=quarteB;
+                strcpy(B[1].R,"Est");
+
+                B[2].inc=quarteC;
+                strcpy(B[2].R,"Nord");
+
+                B[3].inc=quarteD;
+                strcpy(B[3].R,"Central");
+
+B=Trie_tableux(B,4);
+
+
+printf("7. Les Trois Principales Zones G�ographiques :\n");
+for(int i=0 ;i<3;i++){
+    printf("%s : %d transactions\n",B[i].R,B[i].inc);
+}
+if(PrixADDM==0 && PrixADM==0) printf("Les Prix dois Etre superieur a 0 !!\n");
+ float FM=((PrixADM-PrixADDM)/(PrixADDM+PrixADM))*100;
+FM>0 ?printf("- Les propri�t�s situ�es dans le quartier Y ont enregistr� une augmentation de %d%% des prix par rapport au mois dernier\n",FM)
+:(FM<0 ? printf("Les propri�t�s situ�es dans le quartier Y ont enregistr� une diminution de %d%% des prix par rapport au mois dernier\n",-FM) :
+   printf("Les prix des propri�t�s dans le quartier Y sont rest�s stables par rapport au mois dernier\n"));
+
+printf("Ce rapport fournit un aper�u complet des activit�s immobili�res du mois, y compris les revenus g�n�r�s, la r�partition des transactions par type de propri�t� et par prix, les performances des agents immobiliers, les tendances du march�, les zones g�ographiques les plus actives, et des analyses sp�cifiques sur certaines propri�t�s et quartiers\n");
+
+free(B);
+free(T);
+}

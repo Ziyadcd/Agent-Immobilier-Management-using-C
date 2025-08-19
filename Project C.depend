@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1746573775 source:c:\users\dct\desktop\mini_projet c\project c\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"Project C.h"
+	"les Fonction.h"
+	"transaction.h"
+	"Fonction_avancer.h"
+	"Rapport.h"
+	"Affichage.h"
+
+1746724724 c:\users\dct\desktop\mini_projet c\project c\project c.h
+
+1746644107 c:\users\dct\desktop\mini_projet c\project c\les fonction.h
+
+1746554731 c:\users\dct\desktop\mini_projet c\project c\transaction.h
+
+1746728633 c:\users\dct\desktop\mini_projet c\project c\fonction_avancer.h
+
+1746728827 c:\users\dct\desktop\mini_projet c\project c\rapport.h
+
+1746727863 c:\users\dct\desktop\mini_projet c\project c\affichage.h
+
